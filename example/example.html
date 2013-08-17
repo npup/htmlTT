@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>example</title>
+  <link rel="stylesheet" href="../build/htmlTT.css">
+  <style type="text/css">
+    .custom-test {
+      color: #a57;
+      top: 20%;
+      left: 40%;
+      width: 20%;
+    }
+  </style>
+</head>
+
+<body>
+<h1>example</h1>
+
+
+
+<script type="text/x-tooltip-template" id="fbtest">
+  <h2>header</h2><br><p>mer text</p>
+</script>
+<script type="text/x-tooltip-template" id="fbtest2">
+  <h2>header 2</h2><br><p>mer text 2</p>
+</script>
+<script type="text/x-tooltip-template" id="fbtest3">
+  <h2>header 3</h2><br><p>mer text 3</p>
+</script>
+
+<ul>
+  <li><a href="#" data-htmltt="ekk#fbtest">l0</a></li>
+  <li><a href="#" data-htmltt="ekk#fbtest2">l1</a></li>
+  <li><a href="#" data-htmltt="ekk#fbtest3">l2</a></li>
+
+  <li><a href="#" data-htmltt="ukk#fbtest2">l3</a></li>
+  <li><a href="#" data-htmltt="ukk#fbtest3">l4</a></li>
+
+  <li><a href="#" data-htmltt="apa#fbtest">mtt</a></li>
+  <li><a href="#" data-htmltt="apa#fbtest2">mtt2</a></li>
+  <li><a href="#" data-htmltt="apa#fbtest3">mtt3</a></li>
+</ul>
+
+<fieldset id="fset">
+
+</fieldset>
+<script src="../build/htmlTT.js"></script>
+<script>
+  htmlTT.create("ekk", {"pos": {
+    "x": 40
+    , "y": 5
+  }});
+  htmlTT.create("ukk", {"view": "fset"});
+  htmlTT.create("apa", {"class": "custom-test", "pos": false});
+</script>
+
+   <!-- your HTML -->
+   <ul>
+     <li data-htmltt="foo#info1">Bloody information</li>
+     <li data-htmltt="foo#info2">Other information</li>
+   </ul>
+   <!-- tooltip HTML -->
+  <script type="text/x-htmltt" id="info1">
+     <h3>Fee fi fo fum</h3>
+     <p>I smell the DOM</p>
+   </script>
+   <script type="text/x-htmltt" id="info2">
+     <h3>Yo</h3>
+     <p>I lost my wallet in el Segundo</p>
+   </script>
+
+   <!-- then, at the bottom of the page: -->
+   <script>
+     htmlTT.create("foo");
+     // variants:
+     // htmlTT.create("foo", {"class": "custom-styles"});
+     // htmlTT.create("foo", {"pos": {"x": 10, "y": 10}});
+   </script>
+
+
+</body>
+</html>

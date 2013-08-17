@@ -12,7 +12,7 @@ var htmlTT = (function () {
   var win = this, doc = win.document
     , viewClass = "html-tt"
     , ttDataAttr = "data-htmltt"
-    , pause = false;
+    , pause = false, register = {};
 
   var listen = (function () { // le basic abstraction
     return "function" == typeof doc.body.addEventListener ?
@@ -21,15 +21,13 @@ var htmlTT = (function () {
   })();
 
   function init() {
-    if (init.done) {return;}
-
     listen(doc.body, "mouseover", function (e) {
       if (pause) {return;}
       var elem = e.target || e.srcElement
         , data = elem.getAttribute(ttDataAttr), parts;
       if (!data || !(parts=/^(.+)#(.+)$/.exec(data))) {return;}
       var ttGroup = parts[1], srcId = parts[2]
-        , tt = tts[ttGroup], src;
+        , tt = register[ttGroup], src;
       if (!tt || !srcId || srcId==tt.currentSrcId) {return;}
       src = doc.getElementById(srcId);
       if (!src) {return;}
@@ -49,25 +47,24 @@ var htmlTT = (function () {
     });
 
     function hideAll(delay, rel) {
-      for (var ttGroup in tts) {
-        var tt = tts[ttGroup];
+      for (var ttGroup in register) {
+        var tt = register[ttGroup];
         if (!tt.currentSrcId || (rel && tt.view==rel || tt.view.contains(rel))) {continue;}
         hide(tt, delay || 0);
       }
     }
-
-    init.done = true;
+   init = null;
   }
-  init.done = false;
-
-  var tts = {};
 
   function HtmlTT(ttGroup, options) {
     var tt = this, view;
-    if (ttGroup in tts) {return;}
+    if (ttGroup in register) {return;}
     tt.group = ttGroup;
-    tts[ttGroup] = tt;
+    register[ttGroup] = tt;
     tt.currentSrcId = null;
+    tt.pos = {"x": 0, "y": 0};
+    tt.customView = false;
+    var extraClass = "string" == typeof options["class"] ? options["class"] : "";
     if (options.view) {
       if ("string" == typeof options.view) {view = doc.getElementById(options.view);}
       else if (1 === options.view.nodeType) {view = options.view;}
@@ -75,22 +72,24 @@ var htmlTT = (function () {
     if (!view) {
       view = doc.createElement("div");
       view.className = viewClass;
-      view.style.position = "absolute";
-      view.style.zIndex = "1";
+      extraClass || (view.style.position = "absolute");
       view.style.display = "none";
       doc.body.appendChild(view);
     }
-    "string" == typeof options["class"] && (view.className += " " + options["class"]);
-    tt.pos = {"x": 0, "y": 0};
-    if ("pos" in options) {
-      if ("[object Object]" == {}.toString.call(options.pos)) {
-        "x" in options.pos && (tt.pos.x = options.pos.x);
-        "y" in options.pos && (tt.pos.y = options.pos.y);
-      }
-      else {tt.pos = false;}
+    else {
+      view.style.visibility = "hidden";
+      tt.customView = true;
     }
+    if (tt.customView || ("pos" in options && !options.pos)) {
+      tt.pos = false;
+    }
+    else if (tt.pos && "[object Object]" == {}.toString.call(options.pos)) {
+      "x" in options.pos && (tt.pos.x = options.pos.x);
+      "y" in options.pos && (tt.pos.y = options.pos.y);
+    }
+    extraClass && (view.className += " " + extraClass);
     tt.view = view;
-    init();
+    init && init();
   }
 
   function show(tt, elem, src, srcId) {
@@ -98,11 +97,13 @@ var htmlTT = (function () {
     tt.currentSrcId = srcId;
     tt.view.innerHTML = src.innerHTML;
     tt.pos && positionViewFor(tt, elem);
-    tt.view.style.display = "";
+    tt.customView ? tt.view.style.visibility = "visible" : tt.view.style.display = "";
   }
   function hide(tt, delay) {
     tt.currentSrcId = null;
-    tt._timeout = setTimeout(function () {tt.view.style.display = "none";}, delay);
+    tt._timeout = setTimeout(function () {
+      tt.customView ? tt.view.style.visibility = "hidden" : tt.view.style.display = "none";
+    }, delay);
   }
 
   function positionViewFor(tt, elem) {
@@ -111,9 +112,9 @@ var htmlTT = (function () {
       "top": Math.floor(rect.top)
       , "left":  Math.floor(rect.left)
     };
-    var pageOffsets = getPageOffsets();
-    tt.view.style.top = tt.pos.y + pageOffsets.y + pos.top+"px";
-    tt.view.style.left = tt.pos.x + pageOffsets.x + pos.left+"px";
+    var offsets = getPageOffsets();
+    tt.view.style.top = tt.pos.y + offsets.y + pos.top+"px";
+    tt.view.style.left = tt.pos.x + offsets.x + pos.left+"px";
   }
 
   function getPageOffsets() {

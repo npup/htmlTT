@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>htmlTT examples</title>
+  <link rel="stylesheet" href="css/htmlTT.css">
+  <style type="text/css">
+    body {
+      padding: 1em;
+      margin: 1em;
+    }
+    p {
+      font-weight: bold;
+      color: #111;
+    }
+    .custom-tt-style {
+      color: #a57;
+    }
+    .custom-tt-pos {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left:  0;
+      margin: auto;
+      width: 20%;
+      height: 30%;
+    }
+    .custom-container {
+      color: #248;
+      padding: 1em;
+      border: 3px solid #126;
+      display: inline-block;
+      border-radius: 50%;
+      min-width: 15em;
+      min-height: 8em;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+<h1>htmlTT examples</h1>
+
+
+<!-- some annotated HTML -->
+<p>Basic:</p>
+<ul>
+ <li data-htmltt="foo#info1">Bloody information</li>
+ <li data-htmltt="foo#info2">Other information</li>
+</ul>
+
+<!-- some tooltip HTML sources -->
+<script type="text/x-htmltt" id="info1">
+  <h3>Fee fi fo fum</h3>
+  <p>I smell the DOM</p>
+</script>
+<script type="text/x-htmltt" id="info2">
+  <h3>Yo</h3>
+  <p>I lost my wallet in el Segundo</p>
+</script>
+
+<!-- some more annotated HTML -->
+<p>Some extra position tweak:</p>
+<ul>
+  <li><a href="#" data-htmltt="g0#tt0">g0 - 1</a></li>
+  <li><a href="#" data-htmltt="g0#tt1">g0 - 2</a></li>
+  <li><a href="#" data-htmltt="g0#tt2">g0 - 3</a></li>
+</ul>
+
+<p>Show in custom element:</p>
+<ul>
+  <li><a href="#" data-htmltt="g1#tt0">g1 - 1</a></li>
+  <li><a href="#" data-htmltt="g1#tt2">g1 - 3</a></li>
+</ul>
+<!-- a custom target element -->
+<div class="custom-container">
+  Custom tooltip container
+  <div id="custom-target"></div>
+</div>
+
+<p>With custom styles/positioning of tooltip view:</p>
+<ul>
+  <li><a href="#" data-htmltt="g2#tt0">g2 - 1</a></li>
+  <li><a href="#" data-htmltt="g2#tt1">g2 - 2</a></li>
+  <li><a href="#" data-htmltt="g2#tt2">g2 - 3</a></li>
+</ul>
+
+<!-- more tooltip HTML sources -->
+<script type="text/x-tooltip-template" id="tt0">
+  <h2>Tooltip 0</h2><p>This is the first tooltip text.</p>
+</script>
+<script type="text/x-tooltip-template" id="tt1">
+  <h2>Tooltip 1</h2><p>This is another chunk of tooltip HTML</p>
+</script>
+<script type="text/x-tooltip-template" id="tt2">
+  <h2>Tooltip 2</h2><p>The torture never stops...</p>
+</script>
+
+<!-- load script and init tooltip groups -->
+<script src="js/htmlTT.js"></script>
+<script>
+  // nearly the simplest thing that could possibly work
+  htmlTT.create("foo", {"pos": {"x": 30}});
+
+  // tweaking the position some more
+  htmlTT.create(
+    "g0"
+    , {"pos": { "x": 40, "y": 5}
+  });
+
+  // show tooltip in a designated element somewhere on the page
+  htmlTT.create("g1", {"view": "custom-target"});
+
+  // custom styles and take care of positioning externally
+  htmlTT.create("g2", {"class": "custom-tt-style custom-tt-pos", "pos": false});
+</script>
+
+</body>
+</html>

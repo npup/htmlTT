@@ -38,7 +38,7 @@ Third, create the HTML for your tooltips like this:
 	</script>
 	<script type="text/x-htmltt" id="info2">
 		<h3>Yo</h3>
-		<p>I lost my wallet in el Segundo</p>
+		<p>I left my wallet in el Segundo</p>
 	</script>
 
 

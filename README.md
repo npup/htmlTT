@@ -54,3 +54,5 @@ Then, at the bottom of the page, include your preferred version of `htmlTT.js` a
 	
 
 Pressing `ESC` on the page closes any open tooltips.
+
+Check out the demo page at [http://npup.github.io/htmlTT/](http://npup.github.io/htmlTT/)

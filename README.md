@@ -1,7 +1,7 @@
 htmlTT.js
 =====
 
-configurable HTML tooltips
+configurable HTML tooltips, IE6+
 
 
 ## API:

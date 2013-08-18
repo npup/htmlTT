@@ -25,7 +25,7 @@ var htmlTT = (function () {
       if (pause) {return;}
       var elem = e.target || e.srcElement
         , data = elem.getAttribute(ttDataAttr), parts;
-      if (!data || !(parts=/^(.+)#(.+)$/.exec(data))) {return;}
+      if (!data || !(parts=/^(.+)#(.+)$/.exec(data))) {return;}
       var ttGroup = parts[1], srcId = parts[2]
         , tt = register[ttGroup], src;
       if (!tt || !srcId || srcId==tt.currentSrcId) {return;}
@@ -49,7 +49,7 @@ var htmlTT = (function () {
     function hideAll(delay, rel) {
       for (var ttGroup in register) {
         var tt = register[ttGroup];
-        if (!tt.currentSrcId || (rel && tt.view==rel || tt.view.contains(rel))) {continue;}
+        if (!tt.currentSrcId || (rel && (tt.view==rel || tt.view.contains(rel)))) {continue;}
         hide(tt, delay || 0);
       }
     }
@@ -120,17 +120,17 @@ var htmlTT = (function () {
   function getPageOffsets() {
     var x = win.pageXOffset, y = win.pageYOffset, t;
     if (void 0 === x) {
-      x = (((t = doc.documentElement) || (t = doc.body.parentNode)) && typeof t.ScrollLeft == "number" ? t : doc.body).ScrollLeft;
+      x = (((t = doc.documentElement) || (t = doc.body.parentNode)) && typeof t.scrollLeft == "number" ? t : doc.body).scrollLeft;
     }
     if (void 0 === y) {
-      y = (((t = doc.documentElement) || (t = doc.body.parentNode)) && typeof t.ScrollTop == "number" ? t : doc.body).ScrollTop;
+      y = (((t = doc.documentElement) || (t = doc.body.parentNode)) && typeof t.scrollTop == "number" ? t : doc.body).scrollTop;
     }
     return {"x": x, "y": y};
   }
 
   return {
     "create": function (ttGroup, options) {
-      return void new HtmlTT(ttGroup, options || {});
+      return void new HtmlTT(ttGroup, options || {});
     }
   };
 })();

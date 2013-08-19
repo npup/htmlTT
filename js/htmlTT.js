@@ -12,6 +12,8 @@ var htmlTT = (function () {
   var win = this, doc = win.document
     , viewClass = "html-tt"
     , ttDataAttr = "data-htmltt"
+    , ttGroupAttr = ttDataAttr+"-group"
+    , ttSrcAttr = ttDataAttr+"-src"
     , pause = false, register = {};
 
   var listen = (function () { // le basic abstraction
@@ -97,12 +99,16 @@ var htmlTT = (function () {
     tt.currentSrcId = srcId;
     tt.view.innerHTML = src.innerHTML;
     tt.pos && positionViewFor(tt, elem);
+    tt.view.setAttribute(ttGroupAttr, tt.group);
+    tt.view.setAttribute(ttSrcAttr, tt.currentSrcId);
     tt.customView ? tt.view.style.visibility = "visible" : tt.view.style.display = "";
   }
   function hide(tt, delay) {
     tt.currentSrcId = null;
     tt._timeout = setTimeout(function () {
       tt.customView ? tt.view.style.visibility = "hidden" : tt.view.style.display = "none";
+      tt.view.removeAttribute(ttGroupAttr);
+      tt.view.removeAttribute(ttSrcAttr);
     }, delay);
   }
 

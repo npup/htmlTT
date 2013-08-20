@@ -1,7 +1,7 @@
 htmlTT.js
 =====
 
-Configurable JavaScript/HTML tooltips. IE6+. Small size (2.7k minified, 1.6k gzipped), no dependencies.
+Configurable JavaScript/HTML tooltips. IE6+. Small size (2.7k minified, 1.3k gzipped), no dependencies.
 
 
 ## API:

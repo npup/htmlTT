@@ -1,7 +1,7 @@
 htmlTT.js
 =====
 
-Configurable JavaScript/HTML tooltips. IE6+. Small size, no dependencies.
+Configurable JavaScript/HTML tooltips. IE6+. Small size (2.7k minified, 1.6k gzipped), no dependencies.
 
 
 ## API:
@@ -56,5 +56,8 @@ Then, at the bottom of the page, include your preferred version of `htmlTT.js` a
 Pressing `ESC` on the page closes any open tooltips.
 
 When active, the tooltip view element gets set with two attributes: `data-htmltt-group` and `data-htmltt-src`, which contain the group name of the tooltip show and the DOM id of the source of its current HTML.
+
+At the same time, the element which triggered the tooltip receives the attribute `data-htmltt-active`, with the value of the tooltip group name.
+
 
 Check out the demo page at [http://npup.github.io/htmlTT/](http://npup.github.io/htmlTT/)

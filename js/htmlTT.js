@@ -14,6 +14,7 @@ var htmlTT = (function () {
     , ttDataAttr = "data-htmltt"
     , ttGroupAttr = ttDataAttr+"-group"
     , ttSrcAttr = ttDataAttr+"-src"
+    , ttActiveAttr = ttDataAttr+"-active"
     , pause = false, register = {};
 
   var listen = (function () { // le basic abstraction
@@ -96,20 +97,30 @@ var htmlTT = (function () {
 
   function show(tt, elem, src, srcId) {
     tt._timeout && (tt._timeout = clearTimeout(tt._timeout));
+    clearData(tt);
     tt.currentSrcId = srcId;
     tt.view.innerHTML = src.innerHTML;
     tt.pos && positionViewFor(tt, elem);
     tt.view.setAttribute(ttGroupAttr, tt.group);
     tt.view.setAttribute(ttSrcAttr, tt.currentSrcId);
+    elem.setAttribute(ttActiveAttr, tt.group);
+    tt.currentElem = elem;
     tt.customView ? tt.view.style.visibility = "visible" : tt.view.style.display = "";
   }
   function hide(tt, delay) {
     tt.currentSrcId = null;
     tt._timeout = setTimeout(function () {
       tt.customView ? tt.view.style.visibility = "hidden" : tt.view.style.display = "none";
-      tt.view.removeAttribute(ttGroupAttr);
-      tt.view.removeAttribute(ttSrcAttr);
+      clearData(tt);
     }, delay);
+  }
+
+  function clearData(tt) {
+    if (!tt.currentElem) {return;}
+    tt.view.removeAttribute(ttGroupAttr);
+    tt.view.removeAttribute(ttSrcAttr);
+    tt.currentElem.removeAttribute(ttActiveAttr);
+    delete tt.currentElem;
   }
 
   function positionViewFor(tt, elem) {

@@ -74,7 +74,7 @@
   <a href="https://github.com/npup/htmlTT/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
   <p>
     <em>htmlTT</em> is configurable JavaScript/HTML tooltips.<br>
-    No dependencies. 2.7k js minified (1.3k gzipped). IE6+.
+    No dependencies. 3.3k js minified (1.5k gzipped). IE6+.
   </p>
 
   <h2>Examples</h2>
@@ -124,6 +124,13 @@
     <li><a href="#" data-htmltt="g2#tt2">g2 - 3</a></li>
   </ul>
 
+  <p class="expl">Tooltip on focus only for the text inputs, hover only for the submit:</p>
+  <form action="#">
+    <label>Name <input data-htmltt="foc#tt0" type="text" name="name"></label><br>
+    <label>Email <input data-htmltt="foc#tt1" type="email" name="email"></label><br>
+    <input type="submit" data-htmltt="sub#tt3" value="Strawberries">
+  </form>
+
 </div>
 
 <!-- more tooltip HTML sources -->
@@ -136,6 +143,11 @@
 <script type="text/x-tooltip-template" id="tt2">
   <h2>Tooltip 2</h2><p>The torture never stops...</p>
 </script>
+<script type="text/x-tooltip-template" id="tt3">
+  <h2>Let me take you down</h2><p>, cause I'm going to..</p>
+</script>
+
+
 
 <!-- load script and init tooltip groups -->
 <script src="js/htmlTT.js"></script>
@@ -154,6 +166,10 @@
 
   // custom styles and take care of positioning externally
   htmlTT.create("g2", {"class": "custom-tt-style custom-tt-pos", "pos": false});
+
+
+  htmlTT.create("foc", {"hover": false, "pos": {"x": 30, "y": 14}});
+  htmlTT.create("sub", {"focus": false, "pos": {"x": 30}});
 </script>
 
 </body>

@@ -1,7 +1,7 @@
 /**
 *
 * Name: htmlTT.js
-* Version: 0.1
+* Version: 0.2
 * Description: html tooltips
 * Author: P. Envall (petter.envall@gmail.com, @npup)
 * Date: 2013-08-17
@@ -15,44 +15,85 @@ var htmlTT = (function () {
     , ttGroupAttr = ttDataAttr+"-group"
     , ttSrcAttr = ttDataAttr+"-src"
     , ttActiveAttr = ttDataAttr+"-active"
-    , pause = false, register = {};
+    , pause = false, register = {}
+    , hoverName = "hover"
+    , focusName = "focus"
+    , strategies = {
+      "mouseover": hoverName
+      , "mouseout": hoverName
+      , "focusin": focusName
+      , "focusout": focusName
+      , "focus": focusName
+      , "blur": focusName
+    };
 
   var listen = (function () { // le basic abstraction
     return "function" == typeof doc.body.addEventListener ?
-      function (elem, name, handler) {elem.addEventListener(name, handler, false);} :
+      function (elem, name, handler, capture) {elem.addEventListener(name, handler, !!capture);} :
       function (elem, name, handler) {elem.attachEvent("on"+name, handler);};
   })();
 
+  var supportsFocusin = (function () {
+    var result = false, a = doc.createElement("a");
+    a.href= "#";
+    listen(a, "focusin", function () {result = true;});
+    doc.body.appendChild(a);
+    a.focus();
+    doc.body.removeChild(a);
+    return result;
+  })();
+
+  function isObj(o) {return "[object Object]" == {}.toString.call(o);}
+
   function init() {
-    listen(doc.body, "mouseover", function (e) {
-      if (pause) {return;}
-      var elem = e.target || e.srcElement
-        , data = elem.getAttribute(ttDataAttr), parts;
-      if (!data || !(parts=/^(.+)#(.+)$/.exec(data))) {return;}
-      var ttGroup = parts[1], srcId = parts[2]
-        , tt = register[ttGroup], src;
-      if (!tt || !srcId || srcId==tt.currentSrcId) {return;}
-      src = doc.getElementById(srcId);
-      if (!src) {return;}
-      show(tt, elem, src, srcId);
-    });
-
-    listen(doc.body, "mouseout", function (e) {
-      var rel = e.relatedTarget;
-      hideAll(500, rel);
-    });
-
+    listen(doc.body, "mouseover", activate);
+    listen(doc.body, "mouseout", inactivate);
+    if (supportsFocusin) {
+      listen(doc.body, "focusin", activate);
+      listen(doc.body, "focusout", inactivate);
+    }
+    else {
+      listen(doc.body, "focus", activate, true);
+      listen(doc.body, "blur", inactivate, true);
+    }
     listen(doc, "keyup", function (e) {
       if (27!==e.keyCode) {return;}
       pause = true;
       hideAll();
       setTimeout(function () {pause = false;}, 200);
     });
+    function getGroupAndSrcId(elem) {
+      var data = elem.getAttribute(ttDataAttr), parts;
+      if (!data || !(parts=/^(.+)#(.+)$/.exec(data))) {return;}
+      return {
+        "group": parts[1]
+        , "srcId": parts[2]
+      };
+    }
+    function activate(e) {
+      if (pause) {return;}
+      var elem = e.target || e.srcElement
+        , data = getGroupAndSrcId(elem);
+      if (!data) {return;}
+      var tt = register[data.group], src, strategy = strategies[e.type];
+      if (!tt || !data.srcId || data.srcId==tt.currentSrcId) {return;}
+      if (!tt.modes[strategy]) {return;}
+      src = doc.getElementById(data.srcId);
+      if (!src) {return;}
+      show(tt, elem, src, data.srcId);
+    }
 
-    function hideAll(delay, rel) {
+    function inactivate(e) {
+      var data = getGroupAndSrcId(e.target || e.srcElement);
+      hideAll(strategies[e.type], 500, e.relatedTarget, data && data.group);
+    }
+
+    function hideAll(strategy, delay, rel, group) {
+      var someStrategy = arguments.length > 0;
       for (var ttGroup in register) {
+        if (group && ttGroup!=group) {continue;}
         var tt = register[ttGroup];
-        if (!tt.currentSrcId || (rel && (tt.view==rel || tt.view.contains(rel)))) {continue;}
+        if (!tt.currentSrcId || (someStrategy && !tt.modes[strategy]) || (rel && (tt.view==rel || tt.view.contains(rel)))) {continue;}
         hide(tt, delay || 0);
       }
     }
@@ -62,6 +103,14 @@ var htmlTT = (function () {
   function HtmlTT(ttGroup, options) {
     var tt = this, view;
     if (ttGroup in register) {return;}
+    tt.modes = {
+      "hover": true
+      , "focus": true
+    };
+    "hover" in options && (tt.modes.hover = !!options.hover);
+    "focus" in options && (tt.modes.focus = !!options.focus);
+
+    if (!(tt.modes.hover || tt.modes.focus)) {return;}
     tt.group = ttGroup;
     register[ttGroup] = tt;
     tt.currentSrcId = null;
@@ -86,7 +135,7 @@ var htmlTT = (function () {
     if (tt.customView || ("pos" in options && !options.pos)) {
       tt.pos = false;
     }
-    else if (tt.pos && "[object Object]" == {}.toString.call(options.pos)) {
+    else if (tt.pos && isObj(options.pos)) {
       "x" in options.pos && (tt.pos.x = options.pos.x);
       "y" in options.pos && (tt.pos.y = options.pos.y);
     }
@@ -134,16 +183,16 @@ var htmlTT = (function () {
     tt.view.style.left = tt.pos.x + offsets.x + pos.left+"px";
   }
 
-  function getPageOffsets() {
-    var x = win.pageXOffset, y = win.pageYOffset, t;
-    if (void 0 === x) {
-      x = (((t = doc.documentElement) || (t = doc.body.parentNode)) && typeof t.scrollLeft == "number" ? t : doc.body).scrollLeft;
+  var getPageOffsets = (function () {
+    var tmp, t;
+    if ("undefined" != typeof win.pageXOffset) {
+      return function () {return {"x": win.pageXOffset, "y": win.pageYOffset};};
     }
-    if (void 0 === y) {
-      y = (((t = doc.documentElement) || (t = doc.body.parentNode)) && typeof t.scrollTop == "number" ? t : doc.body).scrollTop;
+    else {
+      t = (tmp = doc.documentElement || doc.body.parentNode) && "number" == typeof tmp.scrollLeft ? tmp : doc.body;
+      return function () {return {"x": t.scrollLeft, "y": t.scrollTop};};
     }
-    return {"x": x, "y": y};
-  }
+  })();
 
   return {
     "create": function (ttGroup, options) {

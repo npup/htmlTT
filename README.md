@@ -1,7 +1,7 @@
 htmlTT.js
 =====
 
-Configurable JavaScript/HTML tooltips. IE6+. Small size (2.7k minified, 1.3k gzipped), no dependencies.
+Configurable JavaScript/HTML tooltips. IE6+. Small size (3.3k minified, 1.5k gzipped), no dependencies.
 
 
 ## API:
@@ -9,6 +9,8 @@ Configurable JavaScript/HTML tooltips. IE6+. Small size (2.7k minified, 1.3k gzi
 	htmlTT.create(group[, options]);
 		group 	- (string) name of tooltip group
 		options - (object) options hash:
+			hover	- (boolean, default true) if the tooltips should be shown/hidden due to hovering
+			focus	- (boolean, default true) if the tooltips should be shown/hidden due to focus/blur
 			pos   - (object, default {"x": 0, "y": 0} | boolean false) px offsets of tooltip position. false means no positioning at all
 			class - (string) extra CSS class for tooltip view
 			view  - (DOM node | string (DOM node id)) element to display tooltip in (no automatic positioning will occur)
@@ -71,7 +73,7 @@ Pressing `ESC` on the page closes any open tooltips.
 
 ## More info
 
-When active, *the tooltip view element* gets set with two attributes: `data-htmltt-group` and `data-htmltt-src`, which contain the group name of the tooltip show and the DOM id of the source of its current HTML.
+When active, *the tooltip view element* gets set with two attributes: `data-htmltt-group` and `data-htmltt-src`, which contain the group name of the tooltip shown and the DOM id of its current HTML source.
 
 At the same time, *the element which triggered the tooltip* receives the attribute `data-htmltt-active`, with the value of the tooltip group name.
 
@@ -79,5 +81,10 @@ Since IE7, such attributes can be target for CSS attribute selectors. Go crazy!
 
 If you initialized a tooltip group with a proper value for the `class` property, you also have those CSS classes available on *the tooltip view* (when activated by a tooltip of that group).
 
+Per default, tooltips are triggered for both *hover* and *focus* events. You can throttle this (per group) when initializing:
+
+	htmlTT.create("fgroup", {"hover": false}); // the "fgroup" tooltips will be focus-only
+
+Not more than one tooltip *per group* is shown simultaneously - though tooltips from different groups can be (one focused form input and another element somewhere that is being hovered, for example).
 
 Check out the demo page at [http://npup.github.io/htmlTT/](http://npup.github.io/htmlTT/)

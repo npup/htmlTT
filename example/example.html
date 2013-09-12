@@ -14,7 +14,11 @@
   <link rel="stylesheet" href="../build/htmlTT.css">
 
   <style type="text/css">
-
+    .tt-main-nav {
+      font-family: Courier;
+      position: absolute;
+      max-width: 16em;
+    }
     /* tabs */
     .tabs {
       padding: 0;
@@ -138,15 +142,31 @@
   </p>
 
   <h2>Examples</h2>
+  <script src="../build/htmlTT.js"></script>
 
   <ol class="tabs" id="example-tabs">
-    <li><a href="#content-basic" accesskey="b">Basic</a></li>
-    <li><a href="#content-positioning" accesskey="p">Positioning</a></li>
-    <li><a href="#content-custom-element" accesskey="e">Element</a></li>
-    <li><a href="#content-focus-only" accesskey="f">Focus</a></li>
+    <li><a data-htmltt="main-nav#nav-basic" href="#content-basic" accesskey="b">Basic</a></li>
+    <li><a data-htmltt="main-nav#nav-positioning" href="#content-positioning" accesskey="p">Positioning</a></li>
+    <li><a data-htmltt="main-nav#nav-element" href="#content-custom-element" accesskey="e">Element</a></li>
+    <li><a data-htmltt="main-nav#nav-focus" href="#content-focus-only" accesskey="f">Focus</a></li>
+    <script type="text/x-html" id="nav-basic">
+      Basic example of giving two list items a tooltip each.
+    </script>
+    <script type="text/x-html" id="nav-positioning">
+      Example of giving the tooltips some more position directives.
+    </script>
+    <script type="text/x-html" id="nav-element">
+      How to target all tooltips in a group to be shown in a predefined container.
+    </script>
+    <script type="text/x-html" id="nav-focus">
+      Selecting whether to acitvate the tooltip on <i>hover</i> or <i>focus</i> &dash; or both.
+    </script>
+    <script>
+      htmlTT.create("main-nav", {"class": "tt-main-nav", "pos": {"y": 30, "x": -20}});
+    </script>
   </ol>
 
-  <script src="../build/htmlTT.js"></script>
+
   <div class="tab-content">
     <!-- some annotated HTML -->
     <div id="content-basic">

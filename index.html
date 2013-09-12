@@ -14,6 +14,68 @@
   <link rel="stylesheet" href="css/htmlTT.css">
 
   <style type="text/css">
+
+    /* tabs */
+    .tabs {
+      padding: 0;
+      margin: 1em 0;
+    }
+    .tabs li {
+      float: left;
+      width: 25%;
+      list-style-type: none;
+      text-align: center;
+    }
+    .tabs li.active a {
+      border-bottom: 2px solid #127;
+    }
+    .tabs li a {
+      text-decoration: none;
+    }
+    .tab-content {
+      clear: left;
+      margin-top: 4em;
+    }
+    .tab-content > div {
+      display: none;
+      background-color: #f6f6f6;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      padding: 0 1em 2em;
+    }
+
+    .tab-content > div > script {
+      display: block;
+      font-family: Courier;
+      background-color: #fcfcfc;
+      margin-top: .5em;
+      padding: .5em;
+      white-space: pre;
+      overflow: auto;
+    }
+    .tab-content > div > script[type='text/x-htmltt'] + script[type='text/x-htmltt'] {
+      margin-top: 0;
+    }
+
+    .tab-content > div > script:before {
+      content: '<script>';
+      display: block;
+    }
+
+    .tab-content > div > script:after {
+      content: '</script>';
+      display: block;
+    }
+    .tab-content > div > script[type='text/x-htmltt']:before {
+      content: '<script type="text/x-htmltt" id="' attr(id) '">';
+      display: block;
+    }
+    .tab-content > div > script[type='text/x-html']:before
+    , .tab-content > div > script[type='text/x-html']:after {
+      content: none;
+    }
+
+
     body {
       background-color: #6e7eae;
     }
@@ -25,6 +87,7 @@
       background-color: #f9f9f9;
       padding: 1em;
       border-radius: 4px;
+      min-height: 40em;
     }
     #wrap a {
       color: #139;
@@ -39,19 +102,16 @@
     }
     p.expl {
       font-weight: bold;
+      margin-top: 2em;
     }
     .custom-tt-style {
       color: #a57;
     }
     .custom-tt-pos {
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left:  0;
-      margin: auto;
+      top: 100%;
+      left:  40%;
       width: 20%;
-      height: 30%;
     }
     .custom-container {
       color: #248;
@@ -79,97 +139,219 @@
 
   <h2>Examples</h2>
 
-  <p>Pressing <em>ESC</em> hides any open tooltips.</p>
+  <ol class="tabs" id="example-tabs">
+    <li><a href="#content-basic" accesskey="b">Basic</a></li>
+    <li><a href="#content-positioning" accesskey="p">Positioning</a></li>
+    <li><a href="#content-custom-element" accesskey="e">Element</a></li>
+    <li><a href="#content-focus-only" accesskey="f">Focus</a></li>
+  </ol>
 
-  <!-- some annotated HTML -->
-  <p class="expl">Basic:</p>
-  <ul>
-   <li data-htmltt="foo#info1">Bloody information</li>
-   <li data-htmltt="foo#info2">Other information</li>
-  </ul>
+  <script src="js/htmlTT.js"></script>
+  <div class="tab-content">
+    <!-- some annotated HTML -->
+    <div id="content-basic">
+      <p class="expl">Basic:</p>
+      <ul>
+        <li data-htmltt="foo#basic1">Bloody information</li>
+        <li data-htmltt="foo#basic2">Other information</li>
+      </ul>
+      <h5>HTML</h5>
+<script type="text/x-html"><li data-htmltt="foo#basic1">Bloody information</li>
+<li data-htmltt="foo#basic2">Other information</li>
+</script>
+      <h5>Tooltip data sources</h5>
+<script type="text/x-htmltt" id="basic1">  <h3>Fee fi fo fum</h3>
+  <p>I smell the DOM</p>
+</script>
+<script type="text/x-htmltt" id="basic2">  <h3>Yo</h3>
+  <p>I left my wallet in el Segundo</p>
+</script>
+      <h5>Initialization</h5>
+<script>  // nearly the simplest thing that could possibly work
+  htmlTT.create("foo", {"pos": {"x": 30}});
+</script>
+    </div>
 
-  <!-- some tooltip HTML sources -->
-  <script type="text/x-htmltt" id="info1">
-    <h3>Fee fi fo fum</h3>
-    <p>I smell the DOM</p>
-  </script>
-  <script type="text/x-htmltt" id="info2">
-    <h3>Yo</h3>
-    <p>I left my wallet in el Segundo</p>
-  </script>
+    <div id="content-positioning">
 
-  <!-- some more annotated HTML -->
-  <p class="expl">Some extra position tweak:</p>
-  <ul>
-    <li><a href="#" data-htmltt="g0#tt0">g0 - 1</a></li>
-    <li><a href="#" data-htmltt="g0#tt1">g0 - 2</a></li>
-    <li><a href="#" data-htmltt="g0#tt2">g0 - 3</a></li>
-  </ul>
+      <p class="expl">Some extra position tweak:</p>
+      <ul>
+        <li><a href="#" data-htmltt="pos1#pos-a">Positioning 1 - A</a></li>
+        <li><a href="#" data-htmltt="pos1#pos-b">Positioning 1 - B</a></li>
+        <li><a href="#" data-htmltt="pos1#pos-c">Positioning 1 - C</a></li>
+      </ul>
+      <h5>HTML</h5>
+<script type="text/x-html"><li><a href="#" data-htmltt="pos1#pos-a">Positioning 1 - A</a></li>
+<li><a href="#" data-htmltt="pos1#pos-b">Positioning 1 - B</a></li>
+<li><a href="#" data-htmltt="pos1#pos-c">Positioning 1 - C</a></li>
+</script>
+      <h5>Tooltip data sources</h5>
+<script type="text/x-htmltt" id="pos-a">  <h2>Position demo</h2>
+  <p>First</p>
+</script>
+<script type="text/x-htmltt" id="pos-b">  <h2>Position demo</h2>
+  <p>Second..</p>
+</script>
+<script type="text/x-htmltt" id="pos-c">  <h2>Position demo</h2>
+  <p>The torture never stops...</p>
+</script>
+      <h5>Initialization</h5>
+<script>  htmlTT.create(
+    "pos1", {"pos": { "x": 40, "y": 5}
+  });
+</script>
 
-  <p class="expl">Show in custom element:</p>
-  <ul>
-    <li><a href="#" data-htmltt="g1#tt0">g1 - 1</a></li>
-    <li><a href="#" data-htmltt="g1#tt2">g1 - 3</a></li>
-  </ul>
-  <!-- a custom target element -->
-  <div class="custom-container">
-    Custom tooltip container
-    <div id="custom-target"></div>
+      <p class="expl">With custom styles/positioning of tooltip view:</p>
+      <ul>
+        <li><a href="#" data-htmltt="pos2#pos-a">Positioning 2 - A</a></li>
+        <li><a href="#" data-htmltt="pos2#pos-b">Positioning 2 - B</a></li>
+        <li><a href="#" data-htmltt="pos2#pos-c">Positioning 2 - C</a></li>
+      </ul>
+
+      <h5>HTML</h5>
+<script type="text/x-html"><li><a href="#" data-htmltt="pos2#pos2-a">Positioning 2 - A</a></li>
+<li><a href="#" data-htmltt="pos2#pos2-b">Positioning 2 - B</a></li>
+<li><a href="#" data-htmltt="pos2#pos2-c">Positioning 2 - C</a></li>
+</script>
+
+      <h5>Tooltip data sources</h5>
+<script type="text/x-htmltt" id="pos2-a">  <h2>Position demo 2</h2>
+  <p>First</p>
+</script>
+<script type="text/x-htmltt" id="pos2-b">  <h2>Position demo 2</h2>
+  <p>Second</p>
+</script>
+<script type="text/x-htmltt" id="pos2-c">  <h2>Position demo 2</h2>
+  <p>The torture never stops...</p>
+</script>
+
+      <h5>Initialization</h5>
+<script>  // custom styles and take care of positioning externally
+  htmlTT.create("pos2", {"class": "custom-tt-style custom-tt-pos", "pos": false});
+</script>
+    </div>
+
+    <div id="content-custom-element">
+      <p class="expl">Show in custom element:</p>
+      <ul>
+        <li><a href="#" data-htmltt="cus#custom0">custom element - 1</a></li>
+        <li><a href="#" data-htmltt="cus#custom1">custom element - 2</a></li>
+      </ul>
+      <!-- a custom target element -->
+      <div class="custom-container">
+        Custom tooltip container
+        <div id="custom-target"></div>
+      </div>
+      <h5>HTML</h5>
+<script type="text/x-html"><li><a href="#" data-htmltt="cus#custom0">custom element - 1</a></li>
+<li><a href="#" data-htmltt="cus#custom1">custom element - 2</a></li>
+</script>
+      <h5>Tooltip data sources</h5>
+<script type="text/x-htmltt" id="custom0">  <h2>Tooltip 0</h2>
+  <p>This is the first tooltip text.</p>
+</script>
+<script type="text/x-htmltt" id="custom1">  <h2>Tooltip 1</h2>
+  <p>This is another chunk of tooltip HTML</p>
+</script>
+      <h5>Initialization</h5>
+<script>  // show tooltip in a designated element somewhere on the page
+  htmlTT.create("cus", {"view": "custom-target"});
+</script>
+    </div>
+
+    <div id="content-focus-only">
+      <p class="expl">Tooltip on focus only for the text inputs, hover only for the submit:</p>
+      <form action="#">
+        <label>Name <input data-htmltt="foc#foc-0" type="text" name="name"></label><br>
+        <label>Email <input data-htmltt="foc#foc-1" type="email" name="email"></label><br>
+        <input type="submit" data-htmltt="sub#sub-0" value="Strawberries">
+      </form>
+
+      <h5>HTML</h5>
+<script type="text/x-html"><label>Name
+  <input data-htmltt="foc#foc-0" type="text" name="name">
+</label><br>
+<label>Email
+  <input data-htmltt="foc#foc-1" type="email" name="email">
+</label><br>
+<input type="submit" data-htmltt="sub#sub-0" value="Strawberries">
+</script>
+      <h5>Tooltip data sources</h5>
+<script type="text/x-htmltt" id="foc-0">  <h2>I don't know your name</h2>
+  <p>- so I can't look up your number!</p>
+</script>
+<script type="text/x-htmltt" id="foc-1">  <h2>P.S.</h2>
+  <p>- I love you</p>
+</script>
+<script type="text/x-htmltt" id="sub-0">  <h2>Let me take you down</h2>
+  <p>- cause I&apos;m going to..</p>
+</script>
+      <h5>Initialization</h5>
+<script>  htmlTT.create("foc", {"hover": false, "pos": {"x": 30, "y": 14}});
+  htmlTT.create("sub", {"focus": false, "pos": {"x": 30}});
+</script>
+    </div>
   </div>
 
-  <p class="expl">With custom styles/positioning of tooltip view:</p>
-  <ul>
-    <li><a href="#" data-htmltt="g2#tt0">g2 - 1</a></li>
-    <li><a href="#" data-htmltt="g2#tt1">g2 - 2</a></li>
-    <li><a href="#" data-htmltt="g2#tt2">g2 - 3</a></li>
-  </ul>
-
-  <p class="expl">Tooltip on focus only for the text inputs, hover only for the submit:</p>
-  <form action="#">
-    <label>Name <input data-htmltt="foc#tt0" type="text" name="name"></label><br>
-    <label>Email <input data-htmltt="foc#tt1" type="email" name="email"></label><br>
-    <input type="submit" data-htmltt="sub#tt3" value="Strawberries">
-  </form>
+  <p>Pressing <em>ESC</em> hides any open tooltips.</p>
 
 </div>
 
-<!-- more tooltip HTML sources -->
-<script type="text/x-tooltip-template" id="tt0">
-  <h2>Tooltip 0</h2><p>This is the first tooltip text.</p>
-</script>
-<script type="text/x-tooltip-template" id="tt1">
-  <h2>Tooltip 1</h2><p>This is another chunk of tooltip HTML</p>
-</script>
-<script type="text/x-tooltip-template" id="tt2">
-  <h2>Tooltip 2</h2><p>The torture never stops...</p>
-</script>
-<script type="text/x-tooltip-template" id="tt3">
-  <h2>Let me take you down</h2><p>, cause I'm going to..</p>
-</script>
-
-
-
-<!-- load script and init tooltip groups -->
-<script src="js/htmlTT.js"></script>
 <script>
-  // nearly the simplest thing that could possibly work
-  htmlTT.create("foo", {"pos": {"x": 30}});
+  // the tabs stuff
+  var exampleTabs = (function (navId, defaultTab) {
+    var win = this, doc = win.document
+      , nav = doc.getElementById(navId)
+      , tabs = {};
 
-  // tweaking the position some more
-  htmlTT.create(
-    "g0"
-    , {"pos": { "x": 40, "y": 5}
-  });
+    var tmp = nav.getElementsByTagName("li");
+    for (var idx=0, len=tmp.length; idx<len; ++idx) {
+      var li = tmp[idx]
+        , href = li.getElementsByTagName("a")[0].getAttribute("href")
+        , contentId = href.substring(1);
+      tabs[href] = {
+        "li": li
+        , "href": href
+        , "contentId": contentId
+      };
+    }
+    nav.onclick = function (e) {
+      e || (e = win.event);
+      var elem = e.target || e.srcElement;
+      if (elem.nodeName.toLowerCase() != "a") {return;}
+      show(elem.getAttribute("href"));
+      return false;
+    };
+    function show(thisHref, noPush) {
+      (thisHref in tabs) || (thisHref = defaultTab);
+      for (var href in tabs) {
+        var tab = tabs[href]
+          , content = doc.getElementById(tab.contentId);
+        if (thisHref == href) {
+          content.style.display = "block";
+          tab.li.className = "active";
+          var targetUrl = location.href.replace(/#.+$/, "") + href;
+          noPush || history.pushState({"frag": href}, document.title, targetUrl);
+        }
+        else {
+         content.style.display = "";
+         tab.li.className = "";
+        }
+      }
+    }
+    window.onpopstate = function (e) {
+      var frag = e.state && e.state.frag;
+      frag && show(frag, true);
+    };
 
-  // show tooltip in a designated element somewhere on the page
-  htmlTT.create("g1", {"view": "custom-target"});
+    return function (href) {
+      show(href);
+    };
 
-  // custom styles and take care of positioning externally
-  htmlTT.create("g2", {"class": "custom-tt-style custom-tt-pos", "pos": false});
+  })("example-tabs", "#content-basic");
 
+  exampleTabs(location.hash);
 
-  htmlTT.create("foc", {"hover": false, "pos": {"x": 30, "y": 14}});
-  htmlTT.create("sub", {"focus": false, "pos": {"x": 30}});
 </script>
 
 </body>

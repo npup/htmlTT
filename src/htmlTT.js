@@ -124,7 +124,7 @@ var htmlTT = (function () {
     if (!view) {
       view = doc.createElement("div");
       view.className = viewClass;
-      extraClass || (view.style.position = "absolute");
+      extraClass || (view.style.position = "absolute"); // TODO: issue #1 is about this condition
       view.style.display = "none";
       doc.body.appendChild(view);
     }

@@ -64,11 +64,12 @@ var htmlTT = (function () {
     });
     function getGroupAndSrcId(elem) {
       var data = elem.getAttribute(ttDataAttr), parts;
-      if (!data || !(parts=/^(.+)#(.+)$/.exec(data))) {return;}
-      return {
-        "group": parts[1]
-        , "srcId": parts[2]
-      };
+      if (data && (parts=/^(.+)#(.+)$/.exec(data))) {
+        return {
+          "group": parts[1]
+          , "srcId": parts[2]
+        };
+      }
     }
     function activate(e) {
       if (pause) {return;}
@@ -97,7 +98,7 @@ var htmlTT = (function () {
         hide(tt, delay || 0);
       }
     }
-   init = null;
+   init.done = true;
   }
 
   function HtmlTT(ttGroup, options) {
@@ -141,7 +142,7 @@ var htmlTT = (function () {
     }
     extraClass && (view.className += " " + extraClass);
     tt.view = view;
-    init && init();
+    init.done || init();
   }
 
   function show(tt, elem, src, srcId) {

@@ -1,0 +1,10 @@
+{
+  "name": "html-tt",
+  "description": "html tooltips",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "eslint": "0.5.*"
+    , "uglify-js": "2.4.*"
+  }
+}
